@@ -55,7 +55,7 @@ jobs:
           version: "v1.34.1"
 
       - name: aws eks cluster update
-        run: aws eks update-kubeconfig --region us-west-2 --name lgcns-syjeong-cluster
+        run: aws eks update-kubeconfig --region us-west-2 --name lgcns_syjeong_cluster
 
 
       - name: kubectl apply
