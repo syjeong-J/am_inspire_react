@@ -1,0 +1,70 @@
+name: react deploy to eks
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: us-west-2
+
+jobs:
+
+  # job name
+  build-and-deploy:
+    
+    #runner
+    runs-on: ubuntu-latest
+
+    #step에서 사용하는 명령어 볼 수 있는 사이트 https://docs.github.com/ko/actions
+    steps:
+      # 소스코드 check out
+      - name: checkout github
+        uses: actions/checkout@v2
+
+      # 리눅스 환경에서 kubectl client 설치
+      - name: install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: "v1.34.1"
+      
+      # git 레포마다 secret 설정이 달라짐, aws 인증 
+      - name: aws configure
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET}}
+          aws-region: ${{ env.AWS_REGION}}
+
+      # aws ecr login
+      - name: aws ecr login
+        uses: aws-actions/amazon-ecr-login@v2 
+      
+      - name: apigateway image build and push docker image to ecr
+        env:
+          REGISTRY: 447839931800.dkr.ecr.us-west-2.amazonaws.com
+          REPOSITORY: react-syjeong-frontend
+          IMAGE_TAG: latest
+        run: | 
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f Dockerfile .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        
+      - name: install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: "v1.34.1"
+
+      - name: aws eks cluster update
+        run: aws eks update-kubeconfig --region us-west-2 --name lgcns-syjeong-cluster
+
+
+      - name: kubectl apply
+        run: |
+          kubectl apply -f k8s/react-blue-deployment.yml
+          kubectl apply -f k8s/react-green-deployment.yml
+          kubectl apply -f k8s/react-service.yml
+          kubectl apply -f k8s/react-ingress.yml
+          
+
+
+      

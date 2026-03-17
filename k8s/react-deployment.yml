@@ -1,50 +1,50 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: react-deployment
-  namespace: lgcns
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: react-deployment
+#   namespace: lgcns
 
-spec: 
-  # 자원공간의 낭비를 방지하고 관리의 편리성을 
-  revisionHistoryLimit: 2
+# spec: 
+#   # 자원공간의 낭비를 방지하고 관리의 편리성을 
+#   revisionHistoryLimit: 2
 
-  replicas: 1
-  selector:
-    matchLabels:
-      app: react
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: react
   
-  template:
-    metadata:
-      labels:
-        app: react
+#   template:
+#     metadata:
+#       labels:
+#         app: react
     
-    spec:
-      # docker container
-      containers:
-        - name: react-container
-          # ecr 경로 
-          image: 447839931800.dkr.ecr.us-west-2.amazonaws.com/react-syjeong-frontend:latest
-          ports:
-          # pod 안에서 포트번호, 내부번호라 큰 의미는 없음 
-          - containerPort: 80
+#     spec:
+#       # docker container
+#       containers:
+#         - name: react-container
+#           # ecr 경로 
+#           image: 447839931800.dkr.ecr.us-west-2.amazonaws.com/react-syjeong-frontend:latest
+#           ports:
+#           # pod 안에서 포트번호, 내부번호라 큰 의미는 없음 
+#           - containerPort: 80
           
 
----
-# core service setting
-# core group : pod, service, ConfigMap, Secret, namespace
-apiVersion: v1
-kind: Service
-metadata:
-  name: react-service
-  namespace: lgcns
+# ---
+# # core service setting
+# # core group : pod, service, ConfigMap, Secret, namespace
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: react-service
+#   namespace: lgcns
 
-spec: 
-  type: ClusterIP
-  ports:
-  - port: 80
-    targetPort: 80
-  selector:
-    app: react
+# spec: 
+#   type: ClusterIP
+#   ports:
+#   - port: 80
+#     targetPort: 80
+#   selector:
+#     app: react
 
 
 

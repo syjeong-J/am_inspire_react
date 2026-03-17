@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-blue-deployment
+  namespace: lgcns
+
+spec: 
+  # 자원공간의 낭비를 방지하고 관리의 편리성을 
+  revisionHistoryLimit: 2
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: react
+      version: blue
+  
+  template:
+    metadata:
+      labels:
+        app: react
+        version: blue
+    
+    spec:
+      # docker container
+      containers:
+        - name: react-container
+          # ecr 경로 
+          image: 447839931800.dkr.ecr.us-west-2.amazonaws.com/react-syjeong-frontend:latest
+          ports:
+          # pod 안에서 포트번호, 내부번호라 큰 의미는 없음 
+          - containerPort: 80
+          
+
+
+
+

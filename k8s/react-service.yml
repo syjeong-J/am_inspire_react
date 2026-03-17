@@ -1,0 +1,17 @@
+# blue - green 배포 전략을 위해서 service 별도로 만들고 
+# 
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-service
+  namespace: lgcns
+
+spec: 
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: react
+    # blue-deployment
+    version: blue
