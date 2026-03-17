@@ -1,0 +1,8 @@
+.wrapper {
+    border : 1px solid grey ;
+    border-radius: 16px ;
+    display : flex ;
+    flex-direction: row;
+    margin: 8px ;
+    padding: 8px;
+}
